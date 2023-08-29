@@ -103,6 +103,16 @@
     </gazebo>
   </xacro:macro>
 
+  <xacro:macro name="pad_contact" params="prefix fingerprefix">
+    <link name="${prefix}${fingerprefix}_pad_contact">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <mass value="0.0" />
+        <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+    </link>
+  </xacro:macro>
+
   <xacro:macro name="inner_knuckle_joint" params="prefix fingerprefix reflect">
     <joint name="${prefix}${fingerprefix}_inner_knuckle_joint" type="revolute">
       <origin xyz="0 ${reflect * -0.007678} 0.1422970" rpy="0 0 ${(reflect - 1) * pi / 2}" />
@@ -149,6 +159,14 @@
     </joint>
     <xacro:finger_joints prefix="${prefix}" fingerprefix="right" reflect="-1.0"/>
   </xacro:macro>
+  
+  <xacro:macro name="pad_contact_joint" params="prefix fingerprefix">
+    <joint name="${prefix}{fingerprefix}_pad_contact_joint" type="fixed">
+      <origin xyz="0 0.019 0.037" rpy="0 0 0" />
+      <parent link="${prefix}${fingerprefix}_inner_finger" />
+      <child link="${prefix}${fingerprefix}_pad_contact" />
+    </joint>
+  </xacro:macro>
 
   <xacro:macro name="onrobot_rg2" params="prefix">
     <xacro:onrobot_rg2_base_link prefix="${prefix}"/>
@@ -156,6 +174,10 @@
     <xacro:finger_links prefix="${prefix}" fingerprefix="right"/>
     <xacro:finger_joint prefix="${prefix}"/>
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
+    <xacro:pad_contact prefix="${prefix}" fingerprefix="left"/>
+    <!-- <xacro:pad_contact prefix="${prefix}" fingerprefix="right"/> -->
+    <xacro:pad_contact_joint prefix="${prefix}" fingerprefix="left"/>
+    <!-- <xacro:pad_contact_joint prefix="${prefix}" fingerprefix="right"/> -->
     <xacro:onrobot_rg2_transmission prefix="${prefix}"/>
     <xacro:onrobot_rg2_gazebo prefix="${prefix}"/>
   </xacro:macro>
